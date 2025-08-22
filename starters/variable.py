@@ -1,0 +1,1 @@
+# num1 num2 num3 num4 result result2. they are bad because they aren't specific or tell you what they represent.
