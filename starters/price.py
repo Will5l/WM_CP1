@@ -1,0 +1,1 @@
+# The program uses variables so you can alter them. the program calculates the price and the tax, and if it can be discounted. 
