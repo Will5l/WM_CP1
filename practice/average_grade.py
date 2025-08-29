@@ -13,3 +13,5 @@ while amt_of_classes >= counter:
 comb_grade = comb_grade/amt_of_classes
 comb_grade = round(comb_grade, 2)
 print(comb_grade, "%")
+
+# wah
