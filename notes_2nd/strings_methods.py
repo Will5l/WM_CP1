@@ -6,8 +6,22 @@ name = input("What is your name: ").strip().lower().title()
 # .capitalize() => capitalizes the first letter.
 # .title() => capitalizes the first letter of every word.
 
-print("Hello "+ name +", it is nice to meet you!")
+age = float(input("Bro how old are you?"))
 
-age = input("Bro how old are you?")
+print("Hello {}, it is nice to meet you! I can't believe you are {:.2f}".format(name, age))
 
-Print)
+print(f"Hello {name}, it is nice to meet you! I can't believe you are {age:.1f}")
+
+#print(age.isdigit())
+
+#print("Really? "+age + " is old")
+
+#sentence = "The quick brown fox jumps over the lazy dog"
+
+#word = "brown"
+#start = (sentence.find(word))
+#length = len(word)
+
+
+#print(sentence.replace(word, "yellow"))
+

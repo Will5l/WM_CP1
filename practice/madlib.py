@@ -1,7 +1,9 @@
 # WM 2nd Madlib
 
-noun_one = 
-noun_two = 
-verb_one = 
-verb_two = 
-adjective = 
+noun_one = input("Give me a noun: ")
+noun_two = input("Give me another noun: ")
+verb_one = input("Give me a verb:")
+verb_two = input("Give me another verb: ")
+adjective = input("Give me an adjective: ")
+
+print(noun_one+" did "+verb_one+", and this shocked "+noun_two+", who couldn't believe that "+noun_one+" was able to "+verb_one+" so "+adjective+" and so "+noun_two+" did "+verb_two+".")
