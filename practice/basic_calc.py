@@ -1,27 +1,32 @@
-num1 = input("Give me a number")
-num2 = input("Give me another number")
-equation_type = ("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison")
+num1 = int(input("Give me a number: "))
+num2 = int(input("Give me another number: "))
+equation_type = int(input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison"))
 while equation_type <= 8:
     if equation_type == 1:
         additon_product = (num1+num2)
         print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    elif equation_type == 1:
-        additon_product = (num1+num2)
-        print(f"{num1}+{num2}={additon_product}")
-    else:
-        print()
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 2:
+        subtraction_product = (num1-num2)
+        print(f"{num1}-{num2}={subtraction_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 3:
+        intger_div_product = (num1/num2)
+        print(f"{num1}/{num2}={intger_div_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 4:
+        multiplication_product = (num1*num2)
+        print(f"{num1}*{num2}={multiplication_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 5:
+        exponent_product = (num1**num2)
+        print(f"{num1}**{num2}={exponent_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 6:
+        mod_product = (num1%num2)
+        print(f"{num1}%{num2}={mod_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
+    elif equation_type == 7:
+        floor_div_product = (num1//num2)
+        print(f"{num1}//{num2}={floor_div_product}")
+        equation_type = input("Choose an number for the arithmetic method.\n1. additon\n2. subtraction\n3. intger divison\n4. multiplication\n5. expontent \n6. modular divison\n7. floor divison\n8. To end")
