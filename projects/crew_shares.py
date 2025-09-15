@@ -9,4 +9,4 @@ share_value = (float(round(money_made/total_share_count)))
 captain_amount = share_value*7
 first_mate_amount = share_value*3
 crew_amount = share_value-500
-print(f"The captain get {captain_amount}, the first mate gets {first_mate_amount}, and each crewmate needs {crew_amount} more.")
+print(f"The captain get {captain_amount}, the first mate gets {first_mate_amount}, and each crewmate needs {crew_amount} more.1")
