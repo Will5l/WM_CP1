@@ -36,3 +36,5 @@ print(full_name)
 
 # Slice
 print(last_name[2:6])
+
+print(0.1 + 0.2)
