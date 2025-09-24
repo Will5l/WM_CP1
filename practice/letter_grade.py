@@ -1,7 +1,6 @@
 # WM 2nd Letter Grade
-grade = 1
 
-grade = float(input("Give me your grade percentage and I'll give you your letter grade."))
+grade = float(input("Give me your grade percentage and I'll give you your letter grade. "))
 if grade >= 94:
     print(f"You have {grade:.2f}%, an A")
 elif grade >= 90:
@@ -15,16 +14,16 @@ elif grade >= 80:
 elif grade >= 77:
     print(f"You have {grade:.2f}%, a C+")
 elif grade >= 74:
-        print(f"You have {grade:.2f}%, a C")
-    elif grade >= 70:
-        print(f"You have {grade:.2f}%, a C-")
-    elif grade >= 67:
-        print(f"You have {grade:.2f}%, a D+")
-    elif grade >= 63:
-        print(f"You have {grade:.2f}%, a D")
-    elif grade >= 60:
-        print(f"You have {grade:.2f}%, a D-")
-    elif grade > 0:
-        print(f"You have {grade:.2f}%, a F")
-    else:
-        print("Something went wrong, invalid.")
+    print(f"You have {grade:.2f}%, a C")
+elif grade >= 70:
+    print(f"You have {grade:.2f}%, a C-")
+elif grade >= 67:
+    print(f"You have {grade:.2f}%, a D+")
+elif grade >= 63:
+    print(f"You have {grade:.2f}%, a D")
+elif grade >= 60:
+    print(f"You have {grade:.2f}%, a D-")
+elif grade >= 0:
+    print(f"You have {grade:.2f}%, a F")
+else:
+    print("Something went wrong, invalid.")
