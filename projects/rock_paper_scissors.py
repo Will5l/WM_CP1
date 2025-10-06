@@ -11,8 +11,10 @@ def slow_print(text, delay=0.05):
         time.sleep(delay)
     print() # Add a newline at the end
 slow_print("We are gonna play rock paper scissors")
-
+user_score = 0
+computer_score = 0
 while True:
+    print(f"Score \nUser:{user_score}\nComputer:{computer_score}")
     user = input("Choose rock paper or scissors (q to leave)")
     computer = random.randint(1,3)
     if user == "rock":
@@ -24,9 +26,10 @@ while True:
     " |   /\n" \
     "/    |\n" \
     "|____|\n"
-)*2
+)
         elif computer == 2:
             print("You lost")
+            computer_score += 1
             print(
     "  ___\n" \
     " /   |\n" \
@@ -45,6 +48,7 @@ while True:
 )
         elif computer == 3:
             print("You win")
+            user_score += 1
             print(
     "  ___\n" \
     " /   |\n" \
@@ -52,16 +56,12 @@ while True:
     "/    |\n" \
     "|____|\n"
 )
-            print(
-    " __\n"
-    "(__)_____\n" \
-    " __   ____\n" \
-    "(__)/\n"
-)
+            print("8<")
 
     elif user == "paper":
         if computer == 1:
             print("You win")
+            user_score += 1
             print(
     " __________\n" \
     "|          |\n" \
@@ -88,9 +88,10 @@ while True:
     "|          |\n" \
     "|          |\n" \
     "|__________|\n" \
-)*2
+)
         elif computer == 3:
             print("You lost")
+            computer_score += 1
             print(
     " __________\n" \
     "|          |\n" \
@@ -100,21 +101,12 @@ while True:
     "|          |\n" \
     "|__________|\n" \
 )
-            print(
-    " __\n"
-    "(__)_____\n" \
-    " __   ____\n" \
-    "(__)/\n"
-)
-    elif user == "scissor":
+            print("8<")
+    elif user == "scissors":
         if computer == 1:
             print("You lost")
-            print(
-    " __\n"
-    "(__)_____\n" \
-    " __   ____\n" \
-    "(__)/\n"
-)
+            computer_score += 1
+            print("8<")
             print(
     "  ___\n" \
     " /   |\n" \
@@ -124,12 +116,8 @@ while True:
 )  
         elif computer == 2:
             print("You won")
-            print(
-    " __\n"
-    "(__)_____\n" \
-    " __   ____\n" \
-    "(__)/\n"
-)
+            user_score += 1
+            print("8<")
             print(
     " __________\n" \
     "|          |\n" \
@@ -141,12 +129,7 @@ while True:
 )
         elif computer == 3:
             print("Tie")
-            print(
-    " __\n"
-    "(__)_____\n" \
-    " __   ____\n" \
-    "(__)/\n"
-)*2
+            print("\n8<")
     elif user == "q":
         break
     else:
