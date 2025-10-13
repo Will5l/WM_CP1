@@ -1,7 +1,8 @@
 # WM 2nd Password Strength Checker
-
+import printing_slow
 #Set up a list for the special characters, SPECIAL_CHARS
 special_chars = ["!","@","#","$","%","^","&","*","(",")","_","+","-","=","[","]","{","}","|",";",":",",",".","<",">","?"]
+#Setup variables to tick if they have the corresponding thing, for later checking
 length = False
 upper = False
 lower = False
@@ -10,7 +11,8 @@ special = False
 #Setup a variable for the rating, starting it at 0
 rating = 0
 #Ask user for their password input and store it as PASSWORD
-password = input("Enter your password to check its strength: ")
+printing_slow.slow_print("Enter your password to check its strength: ")
+password = input()
 #Check length of password, if it is more than 8, add 1 to the rating
 if len(password) >= 8:
     rating += 1
@@ -20,34 +22,48 @@ for i in password:
     if i.isupper():
         rating += 1
         upper = True
+        break
 #Check the password for the lowercase, if it has one, add 1 to the rating
 for i in password:
     if i.islower():
         rating += 1
         lower = True
-
-#Check the password for numbers, if it has any, add 1 to the string
+        break
+#Check the password for numbers, if it has any, add 1 to the rating
 for i in password:
     if i.isnumeric():
         rating += 1
         num = True
-
+        break
 #Check the password with the special character list, if it has one of them, add 1 to the rating
 for i in password:
     if i in special_chars:
         rating += 1
         special = True
+        break
 #Display the rating of the password, and how strong it is, 1-2 points: Weak 3 points: Moderate 4 points: Strong 5 points: Very Strong
 if rating == 1 or rating == 2:
-    print("Your password is weak")
+    print(f"Your password is weak {rating}/5")
 elif rating == 3:
-    print("Your passwords strength is ok, but could be better")
+    print("Your passwords strength is ok, but could be better 3/5")
 elif rating == 4:
-    print("Your password is strong")
+    print("Your password is strong 4/5")
 elif rating == 5:
-    print("Your password is very strong")
+    print("Your password is very strong 5/5")
+if length == True:
+    print("Length 8 or more")
+if upper == True:
+    print("Capital included")
+if lower == True:
+    print("Lowercase included")
+if num == True:
+    print("Number included")
+if special == True:
+    print("Special included")
+else:
+    print("invalid")
 #If the password is missing something, display what its missing, and make a suggestion for the corresponding problem.
-if rating < 5:
+if rating < 5 and rating >0:
     if length == False:
         print("You should make your password longer")
     if upper == False:
@@ -59,4 +75,16 @@ if rating < 5:
     if special == False:
         print("You should add special characters to your password")
 
-#Make a bar that fills in by fifths based on the strength.
+#Make a bar that fills in by fifths based on the strength based on the rating number with if elses
+if rating == 5:
+    print("////|////|////|////|////|")
+elif rating == 4:
+    print("|////|////|////|////|    |")
+elif rating == 3:
+    print("|////|////|////|    |    |")
+elif rating == 2:
+    print("|////|////|    |    |    |")
+elif rating == 1:
+    print("|////|    |    |    |    |")
+elif rating == 0:
+    print("|    |    |    |    |    |")
