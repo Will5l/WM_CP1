@@ -36,9 +36,13 @@ def encoding(x):
             y = y+shift
             for i in cap:
                 if cap.index(i) == y:
-                    final_msg
+                    final_msg = final_msg+i
         elif i in lower():
-            w
+            y = lower.index(i)
+            y = y+shift
+            for i in lower:
+                if lower.index(i) == y:
+                    final_msg = final_msg+i
 # Make it ignore numbers spaces and other special chars. Ignore negatives
 # Use indexes to shift the letters
 # Take the encoded/decoded value, and display it with the respective title
