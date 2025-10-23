@@ -1,22 +1,23 @@
 # WM 2nd caesar cypher
-
-# Ask for encode or decode
 final_msg = ""
+# Ask for encode or decode
 def encoding(x):
+    global final_msg
     for i in x:
         if i in cap:
             y = cap.index(i)
             y = y+shift
             for i in cap:
                 if cap.index(i) == y:
-                    final_msg = final_msg+i
-        elif i in lower():
+                    final_msg = final_msg + i
+        elif i in lower:
             y = lower.index(i)
             y = y+shift
             for i in lower:
                 if lower.index(i) == y:
-                    final_msg = final_msg+i
+                    final_msg = final_msg + i
 def decoding(x):
+    global final_msg
     for i in x:
         if i in cap:
             y = cap.index(i)
