@@ -1,18 +1,25 @@
 # WM 2nd caesar cypher
 final_msg = ""
 # Ask for encode or decode
+def overrun(z):
+    if z >= 26:
+        return (z-26)
+    else:
+        return z
 def encoding(x):
     global final_msg
     for i in x:
         if i in cap:
             y = cap.index(i)
             y = y+shift
+            y = overrun(y)
             for i in cap:
                 if cap.index(i) == y:
                     final_msg = final_msg + i
         elif i in lower:
             y = lower.index(i)
             y = y+shift
+            y = overrun(y)
             for i in lower:
                 if lower.index(i) == y:
                     final_msg = final_msg + i
@@ -22,12 +29,14 @@ def decoding(x):
         if i in cap:
             y = cap.index(i)
             y = y+shift
+            y = overrun(y)
             for i in cap:
                 if cap.index(i) == y:
                     final_msg = final_msg+i
         elif i in lower():
             y = lower.index(i)
             y = y+shift
+            y = overrun(y)
             for i in lower:
                 if lower.index(i) == y:
                     final_msg = final_msg+i
@@ -44,15 +53,14 @@ while True:
     if choice == "1":
         msg = input("What would you like to encode? ")
         shift = int(input("What would you like to shift by? "))
-
         encoding(msg)
-        print(final_msg)
+        print(f"Encoded:{final_msg}")
         break
     elif choice == "2":
         msg = input("What would you like to decode? ")
         shift = int(input("What would you like to shift by? "))
         decoding(msg)
-        print(final_msg)
+        print(f"Decoded:{final_msg}")
         break
     else:
         print("Invalid choice")
