@@ -33,7 +33,6 @@ def attacks(dex,ac,str,low,high,hp,shp):
             damage = (str+random.randint(low,high))*2
             hp -= damage
             shp -= damage/4
-            return hp, shp
     else:
         print("")
 
@@ -46,8 +45,6 @@ def mon_turn():
     print("The dire wolf is attacking")
     turn == random.randint(1,3)
     attacks(mon_dex_mod,defense,mon_str_mod,mon_dmg_die_low,mon_dmg_die_high,health,mon_health)
-    health = input
-    mon_health = input
     if hit == True and turn == "1":
         print(f"The dire wolf hit for {damage}, the you now have {health}")
     elif hit == False and turn == "1":
