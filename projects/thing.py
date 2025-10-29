@@ -25,13 +25,12 @@ def attacks(dex,ac,str,low,high,hp,shp):
     global mon_health
     global health
     global health2
-    global health3
     if turn == "1" or turn == 1:
         attack = dex+random.randint(1,20)
         if attack > ac:
             hit = True
             damage =str+random.randint(low,high)
-            health2 = hp - damage
+            hp -= damage
             return hp
         elif attack <= ac:
             hit = False
@@ -40,8 +39,8 @@ def attacks(dex,ac,str,low,high,hp,shp):
         if attack > ac:
             hit = True
             damage = (str+random.randint(low,high))*2
-            health2 = hp - damage
-            health3 = shp - damage/4
+            hp - damage
+            health2 = shp - damage/4
         elif attack <= ac:
             hit = False
     else:
@@ -58,14 +57,11 @@ def mon_turn():
     turn = random.randint(1,2)
     attacks(mon_dex_mod,defense,mon_str_mod,mon_dmg_die_low,mon_dmg_die_high,health,mon_health)
     if hit == True and turn == 1:
-        print(f"The dire wolf hit for {damage}, you now have {health2}hp")
-        health = health2
+        print(f"The dire wolf hit for {damage}, you now have {health}hp")
     elif hit == False and turn == 1:
         print("Dire wolf missed")
     if hit == True and turn == 2:
-        print(f"The dire wolf hit its wild attack for {damage}, and did {damage/4} to itself. You now have {health2}hp, and the monster has {health3}hp")
-        health = health2
-        mon_health = health3
+        print(f"The dire wolf hit its wild attack for {damage}, and did {damage/4} to itself. You now have {health}hp, and the monster has {mon_health}hp")
     elif hit == False and turn == 2:
         print("The monster missed its wild attack")
 def user_turn():
@@ -81,13 +77,13 @@ def user_turn():
             turn = input(f"1. Normal Attack\n 2. Wild Attack(hurts self for 1/4 of damage done for double damage)\n 3. Drink Health Potion({health_potions} left)\n 4. Flee\n")
             attacks(dex_mod,mon_defense,str_mod,dmg_die_low,dmg_die_high,mon_health,health)
             if hit == True and turn == "1":
-                print(f"You hit for {damage}, the dire wolf now has {health2}hp")
+                print(f"You hit for {damage}, the dire wolf now has {mon_health}hp")
                 break
             elif hit == False and turn == "1":
                print("You missed")
                break
             if hit == True and turn == "2":
-                print(f"You hit your wild attack for {damage}, and did {damage/4} to yourself. The monster now has {health2}hp, and you have {health3}hp")
+                print(f"You hit your wild attack for {damage}, and did {damage/4} to yourself. The monster now has {mon_health}hp, and you have {health}hp")
                 break
             elif hit == False and turn == "2":
                 print("You missed your wild attack")
