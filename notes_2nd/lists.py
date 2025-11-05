@@ -1,5 +1,5 @@
 # WM 2nd List notes
-
+y = 0
 import random
 names = ["Alex", "Katie", "Cora", "Andrew", "Jake", "Eric", 5, 3.14, False]
 
