@@ -2,6 +2,7 @@
 import turtle
 import random
 #setup variables
+turtle.speed(50)
 grid_row = [[random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),],
             [random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),],
             [random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),],
@@ -32,11 +33,20 @@ def mazeSetup():
     turtle.left(90)
     turtle.forward(700)
     turtle.left(90)
-    turtle.done
+
 mazeSetup()
     #set it to the first position for the drawing of the inside walls
 #make function for checking if the maze is solvable
-    #
+def isSolvable():
+    global grid_row
+    global grid_columnes
+    for u in range(0,6):
+        for i in range(0,6):
+            grid_row[u][i] = (random.randint(0,1))
+    for u in range(0,6):
+        for i in range(0,6):
+            grid_columnes[u][i] = (random.randint(0,1))
+    #have it fill the list with the numbers, and if it needs to, have it refill them.
 #make function for the actual maze generation
 def mazeGen():
     y = 0
@@ -87,6 +97,8 @@ def mazeGen():
             turtle.penup()
             turtle.forward(100)
             z += 1
+    
         
     #have a turtle draw the inside walls after the solvable function based on the lists, where 1 is a wall and pen goes down, and 0 is not a wall, the pen going up
 mazeGen()
+turtle.done
