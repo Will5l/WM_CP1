@@ -40,12 +40,16 @@ mazeSetup()
 def isSolvable():
     global grid_row
     global grid_columnes
-    for u in range(0,6):
-        for i in range(0,6):
-            grid_row[u][i] = (random.randint(0,1))
-    for u in range(0,6):
-        for i in range(0,6):
-            grid_columnes[u][i] = (random.randint(0,1))
+    solvable = False
+    while solvable == False:
+
+        if solvable == False:
+            for u in range(0,6):
+                for i in range(0,6):
+                    grid_row[u][i] = (random.randint(0,1))
+            for u in range(0,6):
+                for i in range(0,6):
+                    grid_columnes[u][i] = (random.randint(0,1))
     #have it fill the list with the numbers, and if it needs to, have it refill them.
 #make function for the actual maze generation
 def mazeGen():
