@@ -22,6 +22,16 @@ drinks = {
     'Pepsi': 1.49,
     'Cream soda': 1.49
 }
+def order(choice, dict, picked, price):
+    while True:
+        choice = input("What would you like for your main?" )
+        choice = choice.capitalize()
+        for key in dict.keys():
+            if key == choice:
+                picked = True
+        if picked == True:
+            price = mains[main_choice]
+            break
 #Print the menu and prices
 print("Mains")
 for key in mains.keys():
