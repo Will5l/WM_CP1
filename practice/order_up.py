@@ -8,13 +8,13 @@ main = {
  'Burger': 5.99,
  'Steak': 7.99,
  'Sandwich': 6.99,
- 'Grilled Cheese': 4.99,
+ 'Grilled cheese': 4.99,
 }
 side = {
     'Steak fries': 1.99,
     'Curly fries': 1.99,
     'Sweet potato fries': 1.99,
-    'Tater Tots': 1.99
+    'Tater tots': 1.99
 }
 drink = {
     'Water': 1.99,
@@ -31,6 +31,7 @@ def order(dict, choosing):
                 picked = True
         if picked == True:
             price = dict[choice]
+            picked == False
             return price, choice
             break
         else:
@@ -58,4 +59,4 @@ tip_price = meal_cost*tip
 #When all of it is taken, add a tax
 tax = meal_cost*0.08
 total = meal_cost+tip_price+tax
-print(f"You order a {main_choice} with a side of {side1_choice} and {side2_choice}, with some {drink_choice} to drink.\nYour total comes out to {total:.2f}")
+print(f"You ordered a {main_choice} with a side of {side1_choice} and {side2_choice}, with a {drink_choice} to drink.\nYour total comes out to {total:.2f}")
