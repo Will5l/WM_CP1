@@ -22,6 +22,7 @@ drink = {
     'Pepsi': 1.49,
     'Cream soda': 1.49
 }
+#Function that handles the ordering, returning the prices and the dish choosen
 def order(dict, choosing):
     while True:
         choice = input(f"What would you like for your {choosing}?" )
