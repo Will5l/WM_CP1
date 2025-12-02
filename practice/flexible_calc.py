@@ -8,7 +8,6 @@ run = True
 # I will set up a seperate function for all the equations that will use *args so it can take any amount of numbers
 def sum(*args):
     total = 0
-    add = True
     x = 0
     while x < amount_given:
         num = args[0][x]
@@ -27,18 +26,37 @@ def average(*args):
     return avg
     pass
 def min(*args):
-    y = 1
-    x = args[0][0]
-    if x < args[0][y]:
-        y += 1
-    elif x > args[0][y]:
-        x = args[0][y]
-        y += 1
-
+    y = 0
+    x = args[0][y]
+    while y < amount_given:
+        if x < args[0][y]:
+            y += 1
+        elif x > args[0][y]:
+            x = args[0][y]
+            y += 1
+        elif x == args[0][y]:
+            y += 1
+    return x
     pass
-def max():
+def max(*args):
+    while y < amount_given:
+        if x > args[0][y]:
+            y += 1
+        elif x < args[0][y]:
+            x = args[0][y]
+            y += 1
+        elif x == args[0][y]:
+            y += 1
+    return x
     pass
-def product():
+def product(*args):
+    total = 1
+    x = 0
+    while x < amount_given:
+        num = args[0][x]
+        total *= num
+        x += 1
+    return total
     pass
 def again():
     keep_going = input("Do you want to do another calculation? ")
@@ -66,13 +84,13 @@ while run == True:
                 print(f"The average of {nums} is {average(nums)}")
                 run = again()
             elif operation == 3:
-                print(f"The min of {nums} is {min()}")
+                print(f"The min of {nums} is {min(nums)}")
                 run = again()
             elif operation == 4:
-                print(f"The max of {nums} is {max()}")
+                print(f"The max of {nums} is {max(nums)}")
                 run = again()
             elif operation == 5:
-                print(f"The product of {nums} is {product()}")
+                print(f"The product of {nums} is {product(nums):,}")
                 run = again()
         else:
             print("Invalid")
