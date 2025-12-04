@@ -21,7 +21,9 @@
     #There will be two perks which are actually just horrible
     #They will be called the Accursed, and the Despised
     #The Accursed would half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops
-    #The Hated would make people less like to offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.
+    #The Hated would make people less likely to offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.
+    #These will simply exist if someone wants the game to be harder.
+    #The rest would be boosts like having a boost to your dex in the initiation of combat or like 10% more damage, cheaper items by like 5% or 10%
 
 #Items
     #Items will be a dictionary of if they are collected or not. Each item will have a True or False value, False if it has yet to be collected, True if it has.
@@ -67,8 +69,17 @@
             #Certain more expensive horses would also get you from point a to b in one day, so you wouldn't hvae to experince a night outside walls, and risk getting robbed or ambushed.
     #You'd be able to sell things in their respective shops.
     #There would also be a quest board of sorts, which would mostly be combat things, like go clear out a bandit camp or something in the woods near the town. These would reward the player with extra gold and xp, but also usually be harder than random encounters.
-        #
+        #There would only be 2 quests, with different diffuclty depending on which town its in.
+        #After the quest is taken, a new location would appear in the location select, that would be named something like "Bandit Camp" if thats the quest they choose.
+        #When they choose it, there would be travel text, and of course the chance of being ambushed like any other travel, but once they make it there, combat starts immediatly.
     #The last option would be to travel to another location.
         #When they choose this option it would display all the other locations names, that are accesiable.
             #If they go to choose the castle, which is the final area and does not let you leave after entering, it would display a warning message twice to make sure they are ready, as they can't leave once they go there.
-
+    #When the character finally decides to go to the castle, it would print text describing the castle, it would be gloomy and despairing. Combat would quickly start with higher level enemies, and you would have to fight through 3 waves of enemies before the base, with there only being a break right before the boss to rest and regain your health from it. None of these battles will allow the player to flee.
+        #There would be two different endings here.
+            #The first would be the good ending where you defeat the final boss and save the kingdom
+            #The second would be the bad ending, where you die to the final boss and the kingdom falls.
+    #The boss fight would be different from other fights.
+    #The boss would of course have more health then the average enemy, alongside more damage, but they can also summon 2 of the unit you fought waves of to reach him to aid him in combat. These would be slightly weaker variants to make it easier, and he would only summon them every 4 turns, and can't have more than 2.
+        #On the first round the boss would spawn with 2 of the weaker variants already there, and the count would start there. 5 rounds later, a conditional would check if they are alive. each one would be labled and have a boolean that is True if they live, and False if they are dead.
+        #They are only summoned if its False
