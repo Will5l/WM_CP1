@@ -1,6 +1,5 @@
 #WM 2nd Factorial Calculator
 run = True
-global factorial_list
 #Have a function that does the actual calculation
 factorial_list = ""
 def factorial(num):
@@ -11,9 +10,11 @@ def factorial(num):
     while num > 0:
         total *= num
         extra_num = str(num)
-        factorial_list += extra_num+"x"
+        factorial_list = factorial_list+extra_num+"x"
+        if num == 1:
+            factorial_list = factorial_list[:-1]
         num -= 1
-    return total
+    return total, factorial_list
 
     pass
     #it will take the number given as the factorial, and have a while loop run multiplication for it.
@@ -22,11 +23,14 @@ while run == True:
     if factorial_num.isnumeric() == True:
         factorial_num = int(factorial_num)
         if factorial_num >= 0:
-            print(f"The factorial of {factorial_num} is written as {factorial_list} and equals {factorial(factorial_num)}")
+            total, factorial_list = factorial(factorial_num)
+            print(f"The factorial of {factorial_num} is written as {factorial_list} and equals {total}")
             thing = input("Would you like to contiune?")
+            thing = thing.lower()
             if thing == "no":
                 break
             elif thing == "yes":
+               factorial_list = ""
                continue 
             pass
         elif factorial_num < 0:
