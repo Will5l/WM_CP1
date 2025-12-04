@@ -10,7 +10,8 @@ def factorial(num):
         return total
     while num > 0:
         total *= num
-        factorial_list += num+"x"
+        extra_num = str(num)
+        factorial_list += extra_num+"x"
         num -= 1
     return total
 
@@ -26,7 +27,7 @@ while run == True:
             if thing == "no":
                 break
             elif thing == "yes":
-                
+               continue 
             pass
         elif factorial_num < 0:
             print("Invalid, number needs to be positive.")
