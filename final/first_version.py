@@ -1,6 +1,15 @@
 #WM 2nd Final
 #Create the player stats as a dictionary with starting values
 #Player_stats
+perk_list_thing = {
+    1:"ToughSkin",
+    2:"Reckless",
+    3:"Quick-footed",
+    4:"Cat-like reflexes",
+    5:"Prodigy",
+    6:"The Accursed",
+    7:"The Hated",
+}
 def gameSetup():
     hp_mod = 0
     str_mod = 0
@@ -11,43 +20,84 @@ def gameSetup():
     "Dexterity":1 +dex_mod,
     "Level":1,
     "Name":"",
+    "Perk1":"",
+    "Perk2":""
     }
+    toughskin = False
+    reckless = False
+    quickfooted = False
+    catlike_reflexes = False
+    prodigy = False
+    the_accursed = False
+    the_hated = False
     perk_list = {
         "ToughSkin":"", #They have a flatout 20% damage reduction
         "Reckless":"", #They always land heavy attacks, but at the cost of taking 1/3 of the damage they deal.
         "Quick-footed":"", #When combat starts their dex check gets an additonal 50% effectivness, and so does their fleeing.
         "Cat-like reflexes":"", #Is immune to being ambushed, so ambushs are just normal combat, and has 20% chance to dodge an attack. Has 1/3 less hp due to avoiding most things and not becoming resilent.
         "Prodigy":"", #Gets 50% more experiance from all sources
-        "":"",
-        "":"",
+        #These two exist solely to make the game harder for people who want that
+        "The Accursed":"", #half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops
+        "The Hated":"", #make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.
     }
-    player_stats["Name"] = input("Choose a name with up to 25 characters\n")
+    x = 26
+    while x > 25:
+        player_stats["Name"] = input("Choose a name with up to 25 characters\n")
+        x = 0
+        for i in player_stats["Name"]:
+            x += 1
+        if x > 25:
+            print("Too long")
+            continue
     print(f"Greetings, {player_stats["Name"]}")
     print("You can choose up to two perks, with buffs, and sometimes debuffs.")
-    perk_choice = input("Do you want to choose perks? no, if not, one if you want only 1, and two if you want 2.")
-    if perk_choice == "no":
-        print("You've choosen to not have perks.")
-    elif perk_choice == "one":
-        print("Here is the list of perks you can choose from:")
+    print("Here is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
+    "\n3.Quick-footed:When combat starts your dex check gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: you are immune to being ambushed, so ambushs are just normal combat, and have a 20 percent chance to dodge an attack. Have 1/3 less hp" \
+    "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.")
+    while True:
+        perk_choice1 = int(input("Enter the number that corresponds with the perk: "))
+        perk_choice2 = int(input("Enter the number that corresponds with the perk: "))
+        if perk_choice1 == perk_choice2:
+            print("You can't have the same perk twice")
+            continue
+        elif perk_choice1 != perk_choice2:
+            if perk_choice1 in perk_list_thing:
+                if perk_choice2 in perk_list_thing:
+                    print(f"You have choosen {perk_list_thing[perk_choice1]}, and {perk_list_thing[perk_choice2]}")
+                    player_stats["Perk1"] = {perk_list_thing[perk_choice1]}
+                    player_stats["Perk2"] = {perk_list_thing[perk_choice2]}
+                    if perk_choice1 or perk_choice2 == 1:
+                        toughskin = True
+                    if perk_choice1 or perk_choice2 == 2:
+                        reckless = True
+                    if perk_choice1 or perk_choice2 == 3:
+                        quickfooted = True
+                    if perk_choice1 or perk_choice2 == 4:
+                        catlike_reflexes = True
+                    if perk_choice1 or perk_choice2 == 5:
+                        prodigy = True
+                    if perk_choice1 or perk_choice2 == 6:
+                        the_accursed = True
+                    if perk_choice1 or perk_choice2 == 7:
+                        the_hated = True
+                    break
+                elif perk_choice2 not in perk_list_thing:
+                    print("Invalid choice")
+                    pass
+            elif perk_choice1 not in perk_list_thing:
+                print("Invalid choice")
+    
     print("intro thing here")
 
 
     
-    return hp_mod,str_mod,dex_mod,player_stats
-hp_mod,str_mod,dex_mod,player_stats = gameSetup()
+    return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated
+hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated = gameSetup()
+print(player_stats)
 
 #Gear
     #The player will have a menu which will tell them what they have equipped and the boosts it gives.
     #They will have armor which increases hp and their weapon increases damage, along with a few item slots for things like magic rings and such that increases stats.
-#Perks
-    #There will be a list of perks the player can choose from. They will get 2
-    #Each perk will have either small buffs, or have larger buffs but also debuffs to offset them.
-    #There will be two perks which are actually just horrible
-    #They will be called the Accursed, and the Despised
-    #The Accursed would half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops
-    #The Hated would make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.
-    #These will simply exist if someone wants the game to be harder.
-    #The rest would be boosts like having a boost to your dex in the initiation of combat or like 10% more damage, cheaper items by like 5% or 10%
 
 #Items
     #Items will be a dictionary of if they are collected or not. Each item will have a True or False value, False if it has yet to be collected, True if it has.
