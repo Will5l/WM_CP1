@@ -15,13 +15,61 @@ def gameSetup():
     str_mod = 0
     dex_mod = 0
     player_stats = {
-    "Health":15 +hp_mod,
-    "Strength":1 +str_mod,
-    "Dexterity":1 +dex_mod,
+    "CurHealth":15,
+    "MaxHealth":15,
+    "Strength":1,
+    "Dexterity":1,
     "Level":1,
+    "XP":0,
+    "XPrq":100,
     "Name":"",
     "Perk1":"",
     "Perk2":""
+    }
+    inventory = {
+    "Sword":{
+        "Name":"",
+        "Damage":0,
+        "Affinity":"",
+    },
+    "Armor":{
+        "Name":"",
+        "Boost":0,
+    },
+    "Gold":50,
+    "Health potions":0,
+    "Strength potions":0,
+    "Speed potions":0,
+}
+    artifacts = {
+        "Wolf-fang necklace":{
+            "Obtained":False,
+            "Boost to health":0,
+            "Boost to strength":2,
+            "Boost to dexterity":0,
+            "Hint":"Quest"
+        },
+        "Hermes shoes":{
+            "Obtained":False,
+            "Boost to health":0,
+            "Boost to strength":0,
+            "Boost to dexterity":2,
+            "Hint":"Quest"
+        },
+        "Captain's chainmail":{
+            "Obtained":False,
+            "Boost to health":5,
+            "Boost to strength":0,
+            "Boost to dexterity":0,
+            "Hint":"Quest"
+        },
+        "Enchanted Ring":{
+            "Obtained":False,
+            "Boost to health":5,
+            "Boost to strength":1,
+            "Boost to dexterity":1,
+            "Hint":"Quest"
+        }
     }
     toughskin = False
     reckless = False
@@ -30,16 +78,6 @@ def gameSetup():
     prodigy = False
     the_accursed = False
     the_hated = False
-    perk_list = {
-        "ToughSkin":"", #They have a flatout 20% damage reduction
-        "Reckless":"", #They always land heavy attacks, but at the cost of taking 1/3 of the damage they deal.
-        "Quick-footed":"", #When combat starts their dex check gets an additonal 50% effectivness, and so does their fleeing.
-        "Cat-like reflexes":"", #Is immune to being ambushed, so ambushs are just normal combat, and has 20% chance to dodge an attack. Has 1/3 less hp due to avoiding most things and not becoming resilent.
-        "Prodigy":"", #Gets 50% more experiance from all sources
-        #These two exist solely to make the game harder for people who want that
-        "The Accursed":"", #half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops
-        "The Hated":"", #make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.
-    }
     x = 26
     while x > 25:
         player_stats["Name"] = input("Choose a name with up to 25 characters\n")
@@ -50,8 +88,25 @@ def gameSetup():
             print("Too long")
             continue
     print(f"Greetings, {player_stats["Name"]}")
-    print("You can choose up to two perks, with buffs, and sometimes debuffs.")
-    print("Here is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
+    print("You are allowed to allocate 2 skill points to begin with")
+    a = 0
+    while a != 2:
+        point_choice = int(input("What would you like to increase, 1.health, 2.strength, or 3.dexterity. strength affects most weapons damage, while dexterity affects fleeing, who goes first in combat, and some weapons."))
+        if point_choice == 1:
+            player_stats["MaxHealth"] += 5
+            player_stats["CurHealth"] += 5
+            a += 1
+        elif point_choice == 2:
+            player_stats["Strength"] += 1
+            a += 1
+        elif point_choice == 3:
+            player_stats["Dexterity"] += 1
+            a += 1
+        else:
+            print("Invalid choice")
+
+    print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
+    print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
     "\n3.Quick-footed:When combat starts your dex check gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: you are immune to being ambushed, so ambushs are just normal combat, and have a 20 percent chance to dodge an attack. Have 1/3 less hp" \
     "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.")
     while True:
@@ -86,28 +141,65 @@ def gameSetup():
                     pass
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
-    
+
     print("intro thing here")
 
 
     
-    return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated
-hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated = gameSetup()
+    return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
+hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts = gameSetup()
 print(player_stats)
+def levelUp():
+    player_stats["CurHealth"] = player_stats["MaxHealth"]
+    point_choice = int(input("What would you like to increase, 1.health, 2.strength, or 3.dexterity. strength affects most weapons damage, while dexterity affects fleeing, who goes first in combat, and some weapons."))
+    if point_choice == 1:
+        player_stats["MaxHealth"] += 5
+        player_stats["CurHealth"] += 5
+    elif point_choice == 2:
+        player_stats["Strength"] += 1
+    elif point_choice == 3:
+        player_stats["Dexterity"] += 1
+    pass
+basic_enemies = {
+    "Wolf":{
+        "Health":10,
+        "strength":2,
+        "dexterity":1,
+        "gold":0,
+        "XP":25,
+    },
+    "Bandit":{
+        "Health":15,
+        "strength":1,
+        "dexterity":2,
+        "gold":10,
+        "XP":35,
+    },
+    "Elite Bandit":{
+        "Health":20,
+        "strength":2,
+        "dexterity":4,
+        "gold":25,
+        "XP":55,
+    },
+    "Corrupt Knight":{
+        "Health":35,
+        "strength":4,
+        "dexterity":2,
+        "gold":50,
+        "XP":65,
+    },
+    "Royal Guard":{
+        "Health":45,
+        "strength":5,
+        "dexterity":3,
+        "gold":0,
+        "XP":0,
+    },
+}
+def combat():
 
-#Gear
-    #The player will have a menu which will tell them what they have equipped and the boosts it gives.
-    #They will have armor which increases hp and their weapon increases damage, along with a few item slots for things like magic rings and such that increases stats.
-
-#Items
-    #Items will be a dictionary of if they are collected or not. Each item will have a True or False value, False if it has yet to be collected, True if it has.
-    #The room the item spawns will check if it is False and if it is will say that they found it, and change it to True.
-    #If they reenter the same room, and the value is True, it will not mention the item.
-    #When the dictionary value is changed to True, a code will run that will add to the players stats
-    #ex dictionary
-        #str_ring: False
-        #dex_ring: True
-
+    pass
 #make a function for normal combat
     #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
     #Whoever has the higher dex will go first in the combat, and the order will go in order from the highest to lowest.
@@ -122,7 +214,19 @@ print(player_stats)
     #If the player dies then they will get a game over text and the option to play again.
     #If they flee it will say they fled and will return them to whatever location they were at before combat started.
     #If they win they will get a battle win text, telling them how much xp they got, if they leveled up, if they got gold, and if they got any items.
+def town1():
+    pass
+def town2():
+    pass
+def town3():
+    pass
+def forestOrSomething():
+    pass
 
+
+
+def castle():
+    pass
 #each of the 3 towns/villages will be a function
     #when they enter each town, the text will greet them, saying something similar to "welcome to x"
     #It will then present them with options for the town.
