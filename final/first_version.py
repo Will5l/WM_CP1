@@ -193,12 +193,12 @@ basic_enemies = {
         "Health":45,
         "strength":5,
         "dexterity":3,
-        "gold":0,
-        "XP":0,
+        "gold":100,
+        "XP":100,
     },
 }
 def combat():
-
+    
     pass
 #make a function for normal combat
     #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
