@@ -1,6 +1,4 @@
 #WM 2nd Final
-#Create the player stats as a dictionary with starting values
-#Player_stats
 perk_list_thing = {
     1:"ToughSkin",
     2:"Reckless",
@@ -10,7 +8,9 @@ perk_list_thing = {
     6:"The Accursed",
     7:"The Hated",
 }
+#Game setup function
 def gameSetup():
+    #setting stats
     hp_mod = 0
     str_mod = 0
     dex_mod = 0
@@ -26,6 +26,9 @@ def gameSetup():
     "Perk1":"",
     "Perk2":""
     }
+
+
+    #setting inventory
     inventory = {
     "Sword":{
         "Name":"",
@@ -41,6 +44,9 @@ def gameSetup():
     "Strength potions":0,
     "Speed potions":0,
 }
+    
+
+    #Setting artifacts
     artifacts = {
         "Wolf-fang necklace":{
             "Obtained":False,
@@ -71,6 +77,9 @@ def gameSetup():
             "Hint":"Quest"
         }
     }
+
+
+    #Setting perks
     toughskin = False
     reckless = False
     quickfooted = False
@@ -78,6 +87,10 @@ def gameSetup():
     prodigy = False
     the_accursed = False
     the_hated = False
+
+
+
+    #Name setup and stats
     x = 26
     while x > 25:
         player_stats["Name"] = input("Choose a name with up to 25 characters\n")
@@ -105,9 +118,12 @@ def gameSetup():
         else:
             print("Invalid choice")
 
+
+
+    #Perk setup
     print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
     print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
-    "\n3.Quick-footed:When combat starts your dex check gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: you are immune to being ambushed, so ambushs are just normal combat, and have a 20 percent chance to dodge an attack. Have 1/3 less hp" \
+    "\n3.Quick-footed:When combat starts your dex checks gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: have a 20 percent chance to dodge an attack, alongside all dex related things getting 30 percent more effectivness. Have 1/3 less hp" \
     "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.")
     while True:
         perk_choice1 = int(input("Enter the number that corresponds with the perk: "))
@@ -141,7 +157,7 @@ def gameSetup():
                     pass
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
-
+    #Intro text
     print("intro thing here")
 
 
@@ -149,6 +165,9 @@ def gameSetup():
     return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
 hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts = gameSetup()
 print(player_stats)
+
+
+#Level up
 def levelUp():
     player_stats["CurHealth"] = player_stats["MaxHealth"]
     point_choice = int(input("What would you like to increase, 1.health, 2.strength, or 3.dexterity. strength affects most weapons damage, while dexterity affects fleeing, who goes first in combat, and some weapons."))
@@ -160,6 +179,11 @@ def levelUp():
     elif point_choice == 3:
         player_stats["Dexterity"] += 1
     pass
+
+
+
+
+#Enemy Stats
 basic_enemies = {
     "Wolf":{
         "Health":10,
@@ -193,12 +217,48 @@ basic_enemies = {
         "Health":45,
         "strength":5,
         "dexterity":3,
-        "gold":0,
-        "XP":0,
+        "gold":100,
+        "XP":100,
     },
 }
-def combat():
 
+print(player_stats["Name"])
+
+# Combat funtion
+def combat(enemy1name,enemy2name,enemy3name,enemyamount):
+    #Enemy stats get set
+    enemy1hp = basic_enemies[enemy1name["Health"]]
+    enemy1str = basic_enemies[enemy1name["strength"]]
+    enemy1dex = basic_enemies[enemy1name["dexterity"]]
+    enemy1gold = basic_enemies[enemy1name["gold"]]
+    enemy1xp = basic_enemies[enemy1name["XP"]]
+    if enemyamount >= 2:
+        enemy2hp = basic_enemies[enemy2name["Health"]]
+        enemy2str = basic_enemies[enemy2name["strength"]]
+        enemy2dex = basic_enemies[enemy2name["dexterity"]]
+        enemy2gold = basic_enemies[enemy2name["gold"]]
+        enemy2xp = basic_enemies[enemy2name["XP"]]
+    if enemyamount >= 3:
+        enemy3hp = basic_enemies[enemy3name["Health"]]
+        enemy3str = basic_enemies[enemy3name["strength"]]
+        enemy3dex = basic_enemies[enemy3name["dexterity"]]
+        enemy3gold = basic_enemies[enemy3name["gold"]]
+        enemy3xp = basic_enemies[enemy3name["XP"]]
+    player_stats['Dexterity'] += dex_mod
+    player_stats["Strength"] += str_mod
+    player_stats["MaxHealth"] += hp_mod
+    player_stats["CurHealth"] += hp_mod
+    #Setting up functions for enemy combat
+    if enemyamount == 1:
+        print(f"{enemy1name} enters combat with you")
+        if catlike_reflexes == True and quickfooted == True:
+            player_stats['Dexterity'] *= 1.8
+        elif catlike_reflexes == True:
+            player_stats['Dexterity'] *= 1.3
+        elif quickfooted == True:
+            player_stats['Dexterity'] *= 1.5
+        if player_stats["Dexterity"] >= enemy1dex:
+            print(f"{player_stats["Name"]} attack first")
     pass
 #make a function for normal combat
     #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
