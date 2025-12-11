@@ -1,4 +1,13 @@
 #WM 2nd Final
+
+import random
+import slow_print as sp
+
+
+
+player_stats={
+
+}
 perk_list_thing = {
     1:"ToughSkin",
     2:"Reckless",
@@ -122,7 +131,7 @@ def gameSetup():
 
     #Perk setup
     print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
-    print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
+    sp.slow_print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
     "\n3.Quick-footed:When combat starts your dex checks gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: have a 20 percent chance to dodge an attack, alongside all dex related things getting 30 percent more effectivness. Have 1/3 less hp" \
     "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.")
     while True:
@@ -158,7 +167,7 @@ def gameSetup():
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
     #Intro text
-    print("intro thing here")
+    sp.slow_print("intro thing here")
 
 
     
@@ -224,41 +233,70 @@ basic_enemies = {
 
 print(player_stats["Name"])
 
+def attacks():
+    pass
+
+
 # Combat funtion
 def combat(enemy1name,enemy2name,enemy3name,enemyamount):
+    options = [1,2,3,4]
     #Enemy stats get set
     enemy1hp = basic_enemies[enemy1name["Health"]]
     enemy1str = basic_enemies[enemy1name["strength"]]
     enemy1dex = basic_enemies[enemy1name["dexterity"]]
     enemy1gold = basic_enemies[enemy1name["gold"]]
     enemy1xp = basic_enemies[enemy1name["XP"]]
-    if enemyamount >= 2:
-        enemy2hp = basic_enemies[enemy2name["Health"]]
-        enemy2str = basic_enemies[enemy2name["strength"]]
-        enemy2dex = basic_enemies[enemy2name["dexterity"]]
-        enemy2gold = basic_enemies[enemy2name["gold"]]
-        enemy2xp = basic_enemies[enemy2name["XP"]]
-    if enemyamount >= 3:
-        enemy3hp = basic_enemies[enemy3name["Health"]]
-        enemy3str = basic_enemies[enemy3name["strength"]]
-        enemy3dex = basic_enemies[enemy3name["dexterity"]]
-        enemy3gold = basic_enemies[enemy3name["gold"]]
-        enemy3xp = basic_enemies[enemy3name["XP"]]
+    enemy1alive = True
     player_stats['Dexterity'] += dex_mod
     player_stats["Strength"] += str_mod
     player_stats["MaxHealth"] += hp_mod
     player_stats["CurHealth"] += hp_mod
     #Setting up functions for enemy combat
-    if enemyamount == 1:
-        print(f"{enemy1name} enters combat with you")
-        if catlike_reflexes == True and quickfooted == True:
-            player_stats['Dexterity'] *= 1.8
-        elif catlike_reflexes == True:
-            player_stats['Dexterity'] *= 1.3
-        elif quickfooted == True:
-            player_stats['Dexterity'] *= 1.5
-        if player_stats["Dexterity"] >= enemy1dex:
-            print(f"{player_stats["Name"]} attack first")
+    enemy_first = False
+    player_first = False
+    print(f"{enemy1name} enters combat with you")
+    if catlike_reflexes == True and quickfooted == True:
+        player_stats['Dexterity'] *= 1.8
+    elif catlike_reflexes == True:
+        player_stats['Dexterity'] *= 1.3
+    elif quickfooted == True:
+        player_stats['Dexterity'] *= 1.5
+    if player_stats["Dexterity"] >= enemy1dex:
+        print(f"{player_stats["Name"]} attacks first")
+        player_first = True
+    elif player_stats["Dexterity"] < enemy1dex:
+        print("Enemies go first")
+        enemy_first = True
+    if player_first == True:
+        while True:
+            sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+            choice = int(input())
+            if choice not in options:
+                print("Invalid")
+            elif choice in options:
+                if enemyamount == 1:
+                    atk_choice = 1
+                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+    else:
+        print(f"{enemy1name} attacks")
+        choice = random.randint(1,2)
+        enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+    while True:
+            sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+            choice = int(input())
+            if choice not in options:
+                print("Invalid")
+            elif choice in options:
+                    atk_choice = 1
+                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+                    if enemy1hp <= 0:
+                        enemy1alive == False
+            if enemy1alive == True:
+                print(f"{enemy1name} attacks")
+                choice = random.randint(1,2)
+                enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+        
+
     pass
 #make a function for normal combat
     #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
