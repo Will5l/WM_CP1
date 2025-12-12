@@ -1,7 +1,7 @@
 import time
 import sys
 
-def slow_print(text, delay=0.05):
+def slow_print(text, delay=0.02):
     """Prints text character by character with a delay."""
     for char in text:
         sys.stdout.write(char)

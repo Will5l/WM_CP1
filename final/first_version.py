@@ -273,7 +273,7 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
             if (inventory["Potions"["Health potions"]]) == 0:
                 print("You spend your turn franticly looking for something you don't have")
                 return e1hp, player_stats["CurHealth"], flee, inventory
-            if (inventory["Potions"["Health potions"]]) > 0:
+            if inventory["Potions"["Health potions"]] > 0:
                 print("You drink a health potion and heal")
                 inventory["Potions"["Health potions"]] -= 1
                 player_stats["CurHealth"] += player_stats["MaxHealth"]*.4
@@ -313,7 +313,7 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
 def combat(enemy1name):
     options = [1,2,3,4]
     #Enemy stats get set
-    enemy1hp = basic_enemies[enemy1name["Health"]]
+    enemy1hp = basic_enemies.values[enemy1name["Health"]]
     enemy1str = basic_enemies[enemy1name["strength"]]
     enemy1wdmg = basic_enemies[enemy1name["weapondmg"]]
     enemy1dex = basic_enemies[enemy1name["dexterity"]]
