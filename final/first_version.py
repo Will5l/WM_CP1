@@ -40,18 +40,18 @@ def gameSetup():
     #setting inventory
     inventory = {
     "Sword":{
-        "Name":"",
-        "Damage":0,
-        "Affinity":"",
+        "Name":"Copper Shortsword",
+        "Damage":4,
+        "Affinity":"Strength",
     },
     "Armor":{
-        "Name":"",
-        "Boost":0,
+        "Name":"Leather Armor",
+        "Boost":5,
     },
     "Gold":50,
-    "Health potions":0,
-    "Strength potions":0,
-    "Speed potions":0,
+    "Potions":{
+        "Health potions":0,
+    },
 }
     
 
@@ -178,25 +178,41 @@ print(player_stats)
 
 #Level up
 def levelUp():
-    player_stats["CurHealth"] = player_stats["MaxHealth"]
-    point_choice = int(input("What would you like to increase, 1.health, 2.strength, or 3.dexterity. strength affects most weapons damage, while dexterity affects fleeing, who goes first in combat, and some weapons."))
-    if point_choice == 1:
-        player_stats["MaxHealth"] += 5
-        player_stats["CurHealth"] += 5
-    elif point_choice == 2:
-        player_stats["Strength"] += 1
-    elif point_choice == 3:
-        player_stats["Dexterity"] += 1
+    while True:
+        player_stats["CurHealth"] = player_stats["MaxHealth"]
+        point_choice = int(input("What would you like to increase, 1.health, 2.strength, or 3.dexterity. strength affects most weapons damage, while dexterity affects fleeing, who goes first in combat, and some weapons."))
+        if point_choice == 1:
+            player_stats["MaxHealth"] += 5
+            player_stats["CurHealth"] += 5
+            player_stats["XP"] -= player_stats["XPrq"]
+            player_stats["XPrq"] *= 1.2
+        elif point_choice == 2:
+            player_stats["Strength"] += 1
+            player_stats["XP"] -= player_stats["XPrq"]
+            player_stats["XPrq"] *= 1.2
+        elif point_choice == 3:
+            player_stats["Dexterity"] += 1
+            player_stats["XP"] -= player_stats["XPrq"]
+            player_stats["XPrq"] *= 1.2
+        else:
+            print("Invalid")
+        if player_stats["XP"] >= player_stats["XPrq"]:
+
+            continue
+        elif player_stats["XP"] < player_stats["XPrq"]:
+            break
+    return player_stats
+
+
+def gameOver():
     pass
-
-
-
 
 #Enemy Stats
 basic_enemies = {
     "Wolf":{
         "Health":10,
         "strength":2,
+        "weapondmg":2,
         "dexterity":1,
         "gold":0,
         "XP":25,
@@ -204,6 +220,7 @@ basic_enemies = {
     "Bandit":{
         "Health":15,
         "strength":1,
+        "weapondmg":3,
         "dexterity":2,
         "gold":10,
         "XP":35,
@@ -211,6 +228,7 @@ basic_enemies = {
     "Elite Bandit":{
         "Health":20,
         "strength":2,
+        "weapondmg":4,
         "dexterity":4,
         "gold":25,
         "XP":55,
@@ -218,6 +236,7 @@ basic_enemies = {
     "Corrupt Knight":{
         "Health":35,
         "strength":4,
+        "weapondmg":6,
         "dexterity":2,
         "gold":50,
         "XP":65,
@@ -225,24 +244,61 @@ basic_enemies = {
     "Royal Guard":{
         "Health":45,
         "strength":5,
+        "weapondmg":8,
         "dexterity":3,
         "gold":100,
         "XP":100,
     },
 }
 
-print(player_stats["Name"])
 
-def attacks():
+#Attack Function
+def attacks(choice,e1hp,e1str,e1wdmg,t):
+    if t == player_stats["Name"]:
+        if choice == 1 or 2:
+            dmg = player_stats[inventory["Sword"["Affinity"]]]+inventory["Sword"["Damage"]]+random.randint(1,5)
+            if choice == 1:
+                e1hp -= dmg
+                return e1hp, player_stats["CurHealth"]
+            elif choice == 2 and reckless == True:
+                e1hp -= dmg*2
+                player_stats["CurHealth"] -= round(dmg*.3, 0)
+                return e1hp, player_stats["CurHealth"]
+            elif choice == 2 and reckless == False:
+                if random.randint(1,100) >= 40:
+                    e1hp -= dmg*2
+                return e1hp, player_stats["CurHealth"]
+        if choice == 3:
+            print(inventory["Potions"])
+            if (inventory["Potions"["Health potions"]]) == 0:
+                print("You spend your turn franticly looking for something you don't have")
+                return e1hp, player_stats["CurHealth"]
+    elif t == "enemy":
+        dmg = e1str+e1wdmg+random.randint(1,5)
+        if choice == 1:
+            player_stats["CurHealth"] -= dmg
+            return e1hp, player_stats["CurHealth"]
+        elif choice == 2:
+            if random.randint(1,100) >= 40:
+                dmg *= 2
+                player_stats["CurHealth"] -= dmg
+            return e1hp, player_stats["CurHealth"]
+        pass
+
+
+
     pass
+
+    
 
 
 # Combat funtion
-def combat(enemy1name,enemy2name,enemy3name,enemyamount):
+def combat(enemy1name,enemyamount):
     options = [1,2,3,4]
     #Enemy stats get set
     enemy1hp = basic_enemies[enemy1name["Health"]]
     enemy1str = basic_enemies[enemy1name["strength"]]
+    enemy1wdmg = basic_enemies[enemy1name["weapondmg"]]
     enemy1dex = basic_enemies[enemy1name["dexterity"]]
     enemy1gold = basic_enemies[enemy1name["gold"]]
     enemy1xp = basic_enemies[enemy1name["XP"]]
@@ -269,6 +325,7 @@ def combat(enemy1name,enemy2name,enemy3name,enemyamount):
         enemy_first = True
     if player_first == True:
         while True:
+            turn = player_stats["Name"]
             sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
@@ -276,28 +333,47 @@ def combat(enemy1name,enemy2name,enemy3name,enemyamount):
             elif choice in options:
                 if enemyamount == 1:
                     atk_choice = 1
-                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+                    if enemy1hp <= 0:
+                        enemy1alive == False
     else:
+        turn = "enemy"
         print(f"{enemy1name} attacks")
         choice = random.randint(1,2)
-        enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
-    while True:
+        enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+    while enemy1alive == True and player_stats["CurHealth"] <= 0:
             sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
             elif choice in options:
-                    atk_choice = 1
-                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
+                    turn = player_stats["Name"]
+                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive == False
             if enemy1alive == True:
+                turn = "enemy"
                 print(f"{enemy1name} attacks")
                 choice = random.randint(1,2)
-                enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,atk_choice,enemy1str)
-        
+                enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+            elif enemy1alive == False:
+                print(f"You defeated {enemy1name}")
+                if prodigy == True:
+                    enemy1xp *= 1.5
+                break
+    if player_stats["CurHealth"] <= 0:
+        gameOver()
+    else:
+        player_stats["XP"] += enemy1xp
+        if player_stats["XP"] >= player_stats["XPrq"]:
+            player_stats = levelUp()
+        player_stats["Gold"] += enemy1gold
+        return player_stats
 
-    pass
+
+
+
+
 #make a function for normal combat
     #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
     #Whoever has the higher dex will go first in the combat, and the order will go in order from the highest to lowest.
