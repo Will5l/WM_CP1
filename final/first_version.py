@@ -259,20 +259,37 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
             dmg = player_stats[inventory["Sword"["Affinity"]]]+inventory["Sword"["Damage"]]+random.randint(1,5)
             if choice == 1:
                 e1hp -= dmg
-                return e1hp, player_stats["CurHealth"]
+                return e1hp, player_stats["CurHealth"], flee, inventory
             elif choice == 2 and reckless == True:
                 e1hp -= dmg*2
                 player_stats["CurHealth"] -= round(dmg*.3, 0)
-                return e1hp, player_stats["CurHealth"]
+                return e1hp, player_stats["CurHealth"], flee, inventory
             elif choice == 2 and reckless == False:
                 if random.randint(1,100) >= 40:
                     e1hp -= dmg*2
-                return e1hp, player_stats["CurHealth"]
+                return e1hp, player_stats["CurHealth"], flee, inventory
         if choice == 3:
             print(inventory["Potions"])
             if (inventory["Potions"["Health potions"]]) == 0:
                 print("You spend your turn franticly looking for something you don't have")
-                return e1hp, player_stats["CurHealth"]
+                return e1hp, player_stats["CurHealth"], flee, inventory
+            if (inventory["Potions"["Health potions"]]) > 0:
+                print("You drink a health potion and heal")
+                inventory["Potions"["Health potions"]] -= 1
+                player_stats["CurHealth"] += player_stats["MaxHealth"]*.4
+                if player_stats["CurHealth"] > player_stats["MaxHealth"]:
+                    player_stats["CurHealth"] = player_stats["MaxHealth"]
+            return e1hp, player_stats["CurHealth"], flee, inventory
+        if choice == 4:
+            if catlike_reflexes == True and quickfooted == True:
+                player_stats['Dexterity'] *= 1.8
+            elif catlike_reflexes == True:
+                player_stats['Dexterity'] *= 1.3
+            elif quickfooted == True:
+                player_stats['Dexterity'] *= 1.5
+            if random.randint(1,100) < player_stats["Dexterity"]:
+                flee = True
+                return e1hp, player_stats["CurHealth"], flee, inventory
     elif t == "enemy":
         dmg = e1str+e1wdmg+random.randint(1,5)
         if choice == 1:
@@ -293,7 +310,7 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
 
 
 # Combat funtion
-def combat(enemy1name,enemyamount):
+def combat(enemy1name):
     options = [1,2,3,4]
     #Enemy stats get set
     enemy1hp = basic_enemies[enemy1name["Health"]]
@@ -331,46 +348,58 @@ def combat(enemy1name,enemyamount):
             if choice not in options:
                 print("Invalid")
             elif choice in options:
-                if enemyamount == 1:
                     atk_choice = 1
-                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive == False
-    else:
+                    break
+    if flee == False:
         turn = "enemy"
         print(f"{enemy1name} attacks")
         choice = random.randint(1,2)
-        enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
-    while enemy1alive == True and player_stats["CurHealth"] <= 0:
+        if catlike_reflexes == True:
+            if random.randint(1,100) <= 20:
+                print("You dodged with your reflexes")
+        else:
+            enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+    while enemy1alive == True and player_stats["CurHealth"] <= 0 and flee == False:
             sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
             elif choice in options:
                     turn = player_stats["Name"]
-                    enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1wdmg,turn)
+                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive == False
             if enemy1alive == True:
                 turn = "enemy"
                 print(f"{enemy1name} attacks")
                 choice = random.randint(1,2)
-                enemy1hp, player_stats["CurHealth"]=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
-            elif enemy1alive == False:
-                print(f"You defeated {enemy1name}")
+                if enemy1alive == False:
+                    print(f"You defeated {enemy1name}")
+                    break
+                elif catlike_reflexes == True:
+                    if random.randint(1,100) <= 20:
+                        print("You dodged with your reflexes")
+                elif catlike_reflexes == False:
+                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                 if prodigy == True:
                     enemy1xp *= 1.5
                 break
     if player_stats["CurHealth"] <= 0:
         gameOver()
+    elif flee == True:
+        print("You fled from combat")
+        return player_stats, inventory
     else:
         player_stats["XP"] += enemy1xp
         if player_stats["XP"] >= player_stats["XPrq"]:
             player_stats = levelUp()
         player_stats["Gold"] += enemy1gold
-        return player_stats
+        return player_stats, inventory
 
-
+combat("Wolf")
 
 
 
