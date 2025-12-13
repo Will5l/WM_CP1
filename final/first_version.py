@@ -2,10 +2,6 @@
 import sys
 import random
 
-
-player_stats={
-
-}
 perk_list_thing = {
     1:"ToughSkin",
     2:"Reckless",
@@ -172,9 +168,8 @@ def gameSetup():
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
     #Intro text
-    print("intro thing here")
+    print("You are a wanderer who arrived in a distant kingdom to free it from its corrupted king. You must fight enemies to get gold and xp, to level up and get better equipment to take on the king and save the kingdom")
 
-    
     return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
 hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts = gameSetup()
 print(player_stats)
@@ -278,6 +273,7 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
             elif choice == 2 and reckless == False:
                 if random.randint(1,100) >= 40:
                     e1hp -= dmg*2
+                    dmg *= dmg
                     print(f"You hit for {dmg}, leaving the enemy at {e1hp}")
                 return e1hp, player_stats["CurHealth"], flee, inventory
         if choice == 3:
@@ -394,32 +390,39 @@ def combat(enemy1name,player_stats):
             skip = True
     while enemy1alive == True and player_stats["CurHealth"] >= 0 and flee == False:
             flee = False
-            print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
-            choice = int(input())
+            choice = int(input("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee"))
             if choice not in options:
                 print("Invalid")
             elif choice in options:
                     turn = player_stats["Name"]
-                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1wdmg,turn)
+                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive == False
+                        break
+                    if enemy1hp <= 0:
+                        enemy1alive == False
+                        break
+                    if enemy1alive == False:
+                        print(f"You defeated {enemy1name}")
+                        break
             if enemy1alive == True:
                 turn = "enemy"
                 print(f"{enemy1name} attacks")
                 choice = random.randint(1,2)
-                if enemy1alive == False:
-                    print(f"You defeated {enemy1name}")
-                    break
-                elif catlike_reflexes == True:
+                if catlike_reflexes == True:
                     if random.randint(1,100) <= 20:
                         print("You dodged with your reflexes")
                     else:
                         enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+            if enemy1alive == False:
+                print(f"You defeated {enemy1name}")
+                break
     if player_stats["CurHealth"] <= 0:
         print("You died")
         thing = input("Would you like to try again? y/n")
         if thing == "y":
             gameSetup()
+            exit
         elif thing == "n":
             sys.exit()
         pass
@@ -512,7 +515,7 @@ def betterSwordTown():
     global player_stats
     global inventory
     while True:
-        choice = int(input("What would you like to do?\n1.Gear shop\nApothecary\n3.Go somewhere else\n"))
+        choice = int(input("What would you like to do?\n1.Gear shop\n2.Apothecary\n3.Go somewhere else\n"))
         if choice == 1:
             choice = int(input("Welcome to the gear shop. What would you like to do?\n1.Buy something\n2.leave\n"))
             if choice == 1:
@@ -580,7 +583,7 @@ def dungeon():
         choice = int(input("What would you like to do?\n1.Fight\n2.Leave\n"))
         if choice == 1:
             thing = input("What enemy would you like to fight?\nWolf\nBandit\nElite Bandit\nCorrupt Knight\nRoyal Guard\n(Enter the name EXACTLY)\n")
-            player_stats, inventory = combat(thing, player_stats)
+            player_stats,inventory=combat(thing, player_stats)
             continue
         elif choice == 2:
             choice = int(input("Where would you like to go?\n1.town1\n2.town2\n3.The Castle\n4.Stay here\n"))
@@ -621,8 +624,8 @@ def castle():
     elif thing == "n":
         sys.exit()
     pass
-area = swordTown
+area = swordTown()
 
 
 while True:
-    area = area()
+    area = area
