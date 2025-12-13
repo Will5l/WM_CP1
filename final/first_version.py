@@ -1,8 +1,7 @@
 #WM 2nd Final
-
+import sys
 import random
 import slow_print as sp
-
 
 
 player_stats={
@@ -20,6 +19,9 @@ perk_list_thing = {
 #Game setup function
 def gameSetup():
     #setting stats
+    global player_stats
+    global inventory
+    global artifacts
     hp_mod = 0
     str_mod = 0
     dex_mod = 0
@@ -44,14 +46,8 @@ def gameSetup():
         "Damage":4,
         "Affinity":"Strength",
     },
-    "Armor":{
-        "Name":"Leather Armor",
-        "Boost":5,
-    },
     "Gold":50,
-    "Potions":{
-        "Health potions":0,
-    },
+    "Health potions":0,
 }
     
 
@@ -89,6 +85,14 @@ def gameSetup():
 
 
     #Setting perks
+    global toughskin
+    global reckless
+    global quickfooted
+    global catlike_reflexes
+    global prodigy
+    global the_accursed
+    global the_hated
+
     toughskin = False
     reckless = False
     quickfooted = False
@@ -133,7 +137,7 @@ def gameSetup():
     print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
     sp.slow_print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
     "\n3.Quick-footed:When combat starts your dex checks gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: have a 20 percent chance to dodge an attack, alongside all dex related things getting 30 percent more effectivness. Have 1/3 less hp" \
-    "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests.")
+    "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests. (last two not implemented yet)")
     while True:
         perk_choice1 = int(input("Enter the number that corresponds with the perk: "))
         perk_choice2 = int(input("Enter the number that corresponds with the perk: "))
@@ -146,19 +150,21 @@ def gameSetup():
                     print(f"You have choosen {perk_list_thing[perk_choice1]}, and {perk_list_thing[perk_choice2]}")
                     player_stats["Perk1"] = {perk_list_thing[perk_choice1]}
                     player_stats["Perk2"] = {perk_list_thing[perk_choice2]}
-                    if perk_choice1 or perk_choice2 == 1:
+                    if perk_choice1 == 1 or perk_choice2 == 1:
                         toughskin = True
-                    if perk_choice1 or perk_choice2 == 2:
+                    if perk_choice1 == 2 or perk_choice2 == 2:
                         reckless = True
-                    if perk_choice1 or perk_choice2 == 3:
+                    if perk_choice1 == 3 or perk_choice2 == 3:
                         quickfooted = True
-                    if perk_choice1 or perk_choice2 == 4:
+                    if perk_choice1 == 4 or perk_choice2 == 4:
+                        player_stats["MaxHealth"] -= 5
+                        player_stats["CurHealth"] -= 5
                         catlike_reflexes = True
-                    if perk_choice1 or perk_choice2 == 5:
+                    if perk_choice1 == 5 or perk_choice2 == 5:
                         prodigy = True
-                    if perk_choice1 or perk_choice2 == 6:
+                    if perk_choice1 == 6 or perk_choice2 == 6:
                         the_accursed = True
-                    if perk_choice1 or perk_choice2 == 7:
+                    if perk_choice1 == 7 or perk_choice2 == 7:
                         the_hated = True
                     break
                 elif perk_choice2 not in perk_list_thing:
@@ -169,12 +175,10 @@ def gameSetup():
     #Intro text
     sp.slow_print("intro thing here")
 
-
     
     return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
 hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts = gameSetup()
 print(player_stats)
-
 
 #Level up
 def levelUp():
@@ -202,10 +206,6 @@ def levelUp():
         elif player_stats["XP"] < player_stats["XPrq"]:
             break
     return player_stats
-
-
-def gameOver():
-    pass
 
 #Enemy Stats
 basic_enemies = {
@@ -249,33 +249,46 @@ basic_enemies = {
         "gold":100,
         "XP":100,
     },
+    "boss": {
+    "Health":200,
+    "strength":8,
+    "weapondmg":15,
+    "dexterity":6,
+    "gold":100,
+    "XP":100,
+}
 }
 
 
 #Attack Function
 def attacks(choice,e1hp,e1str,e1wdmg,t):
+    flee = False
     if t == player_stats["Name"]:
         if choice == 1 or 2:
-            dmg = player_stats[inventory["Sword"["Affinity"]]]+inventory["Sword"["Damage"]]+random.randint(1,5)
+            dmg = player_stats[inventory["Sword"]["Affinity"]]+inventory["Sword"]["Damage"]+random.randint(1,5)
             if choice == 1:
                 e1hp -= dmg
+                print(f"You hit for {dmg}, leaving the enemy at {e1hp}")
                 return e1hp, player_stats["CurHealth"], flee, inventory
             elif choice == 2 and reckless == True:
                 e1hp -= dmg*2
                 player_stats["CurHealth"] -= round(dmg*.3, 0)
+                sdmg = round(dmg*.3, 0)
+                print(f"You hit for {dmg}, leaving the enemy at {e1hp}, but your recklessness also caused you to take {sdmg} yourself")
                 return e1hp, player_stats["CurHealth"], flee, inventory
             elif choice == 2 and reckless == False:
                 if random.randint(1,100) >= 40:
                     e1hp -= dmg*2
+                    print(f"You hit for {dmg}, leaving the enemy at {e1hp}")
                 return e1hp, player_stats["CurHealth"], flee, inventory
         if choice == 3:
-            print(inventory["Potions"])
-            if (inventory["Potions"["Health potions"]]) == 0:
+            print(inventory["Health potions"])
+            if (inventory["Health potions"]) == 0:
                 print("You spend your turn franticly looking for something you don't have")
                 return e1hp, player_stats["CurHealth"], flee, inventory
-            if inventory["Potions"["Health potions"]] > 0:
+            if inventory["Potions"]["Health potions"] > 0:
                 print("You drink a health potion and heal")
-                inventory["Potions"["Health potions"]] -= 1
+                inventory["Potions"]["Health potions"] -= 1
                 player_stats["CurHealth"] += player_stats["MaxHealth"]*.4
                 if player_stats["CurHealth"] > player_stats["MaxHealth"]:
                     player_stats["CurHealth"] = player_stats["MaxHealth"]
@@ -292,33 +305,46 @@ def attacks(choice,e1hp,e1str,e1wdmg,t):
                 return e1hp, player_stats["CurHealth"], flee, inventory
     elif t == "enemy":
         dmg = e1str+e1wdmg+random.randint(1,5)
-        if choice == 1:
+        if choice == 1 and toughskin == False:
             player_stats["CurHealth"] -= dmg
-            return e1hp, player_stats["CurHealth"]
-        elif choice == 2:
+            print(f"The enemy hit you for {dmg}, leaving you at {player_stats["CurHealth"]}")
+            return e1hp, player_stats["CurHealth"], flee, inventory
+        elif choice == 2 and toughskin == False:
             if random.randint(1,100) >= 40:
                 dmg *= 2
                 player_stats["CurHealth"] -= dmg
-            return e1hp, player_stats["CurHealth"]
-        pass
-
-
-
-    pass
-
+                print(f"The enemy hit you for {dmg}, leaving you at {player_stats["CurHealth"]}")
+            else:
+                print("The enemy missed!")
+            return e1hp, player_stats["CurHealth"], flee, inventory
+        elif choice == 1 and toughskin == True:
+            player_stats["CurHealth"] -= round(dmg*.8)
+            print(f"The enemy hit you for {dmg}, leaving you at {player_stats["CurHealth"]}")
+            return e1hp, player_stats["CurHealth"], flee, inventory
+        elif choice == 2 and toughskin == True:
+            if random.randint(1,100) >= 40:
+                dmg *= 2
+                player_stats["CurHealth"] -= dmg
+                print(f"The enemy hit you for {dmg}, leaving you at {player_stats["CurHealth"]}")
+            else:
+                print("The enemy missed!")
+            return e1hp, player_stats["CurHealth"], flee, inventory
     
 
 
 # Combat funtion
-def combat(enemy1name):
+def combat(enemy1name,player_stats):
     options = [1,2,3,4]
     #Enemy stats get set
-    enemy1hp = basic_enemies.values[enemy1name["Health"]]
-    enemy1str = basic_enemies[enemy1name["strength"]]
-    enemy1wdmg = basic_enemies[enemy1name["weapondmg"]]
-    enemy1dex = basic_enemies[enemy1name["dexterity"]]
-    enemy1gold = basic_enemies[enemy1name["gold"]]
-    enemy1xp = basic_enemies[enemy1name["XP"]]
+    flee = False
+    skip = False
+    base_dex = player_stats["Dexterity"]
+    enemy1hp = basic_enemies[enemy1name]["Health"]
+    enemy1str = basic_enemies[enemy1name]["strength"]
+    enemy1wdmg = basic_enemies[enemy1name]["weapondmg"]
+    enemy1dex = basic_enemies[enemy1name]["dexterity"]
+    enemy1gold = basic_enemies[enemy1name]["gold"]
+    enemy1xp = basic_enemies[enemy1name]["XP"]
     enemy1alive = True
     player_stats['Dexterity'] += dex_mod
     player_stats["Strength"] += str_mod
@@ -342,8 +368,9 @@ def combat(enemy1name):
         enemy_first = True
     if player_first == True:
         while True:
+            flee = False
             turn = player_stats["Name"]
-            sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+            sp.slow_print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
@@ -351,19 +378,24 @@ def combat(enemy1name):
                     atk_choice = 1
                     enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
-                        enemy1alive == False
+                        enemy1alive = False
                     break
     if flee == False:
-        turn = "enemy"
-        print(f"{enemy1name} attacks")
-        choice = random.randint(1,2)
-        if catlike_reflexes == True:
-            if random.randint(1,100) <= 20:
-                print("You dodged with your reflexes")
-        else:
-            enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
-    while enemy1alive == True and player_stats["CurHealth"] <= 0 and flee == False:
-            sp.slow_print("What would you like to do? 1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+        flee = False
+        if enemy1alive == True:
+            turn = "enemy"
+            print(f"{enemy1name} attacks")
+            choice = random.randint(1,2)
+            if catlike_reflexes == True:
+                if random.randint(1,100) <= 20:
+                    print("You dodged with your reflexes")
+                else:
+                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
+        elif enemy1alive == False:
+            skip = True
+    while enemy1alive == True and player_stats["CurHealth"] >= 0 and flee == False:
+            flee = False
+            sp.slow_print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
@@ -382,85 +414,216 @@ def combat(enemy1name):
                 elif catlike_reflexes == True:
                     if random.randint(1,100) <= 20:
                         print("You dodged with your reflexes")
-                elif catlike_reflexes == False:
-                    enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
-                if prodigy == True:
-                    enemy1xp *= 1.5
-                break
+                    else:
+                        enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
     if player_stats["CurHealth"] <= 0:
-        gameOver()
+        print("You died")
+        thing = input("Would you like to try again? y/n")
+        if thing == "y":
+            gameSetup()
+        elif thing == "n":
+            sys.exit()
+        pass
     elif flee == True:
         print("You fled from combat")
+        player_stats["Dexterity"] = base_dex
         return player_stats, inventory
-    else:
+    elif enemy1alive == False:
+        print("You killed the wolf")
+        player_stats["Dexterity"] = base_dex
+        if prodigy == True:
+            enemy1xp *= 1.5
         player_stats["XP"] += enemy1xp
         if player_stats["XP"] >= player_stats["XPrq"]:
             player_stats = levelUp()
-        player_stats["Gold"] += enemy1gold
+        inventory["Gold"] += enemy1gold
+        print(f"your stats now look like this after the fight:{player_stats}\n{inventory}")
         return player_stats, inventory
 
-combat("Wolf")
 
 
+def swordTown():
+    print("Welcome to town1")
+    global player_stats
+    global inventory
+    while True:
+        choice = int(input("What would you like to do?\n1.Gear shop\n2.Apothecary\n3.Go somewhere else\n"))
+        if choice == 1:
+            choice = int(input("Welcome to the gear shop. What would you like to do?\n1.Buy something\n2.leave\n"))
+            if choice == 1:
+                choice = int(input("1.Iron sword - 50g - 6dmg\n2.Steel sword - 150g - 10dmg\n3.go back\n"))
+                if choice == 1 and inventory["Gold"] >= 50:
+                    print("You bought the Iron sword")
+                    inventory["Sword"]["Name"] = "Iron sword"
+                    inventory["Sword"]["Damage"] = 6
+                    inventory["Sword"]["Affinity"] = "Strength"
+                    inventory["Gold"] -= 50
+                elif choice == 1 and inventory["Gold"] < 50:
+                    print("You can't afford that")
+                elif choice == 2 and inventory["Gold"] >= 150:
+                    print("You bought the Steel sword")
+                    inventory["Sword"]["Name"] = "Steel sword"
+                    inventory["Sword"]["Damage"] = 10
+                    inventory["Sword"]["Affinity"] = "Strength"
+                    inventory["Gold"] -= 150
+                elif choice == 2 and inventory["Gold"] < 150:
+                    print("You can't afford that")
+                elif choice == 3:
+                    continue
+        elif choice == 2:
+            choice = int(input("Welcome to the Apothocary, what would you like to do?\n1.buy health potion\n2.buy 5 health potions\n3.leave\n"))
+            if choice == 1 and inventory["Gold"] >= 10:
+                print("You purchased one health potion!")
+                inventory["Health potions"] += 1
+                inventory["Gold"] -= 10
+            elif choice == 1 and inventory["Gold"] < 10:
+                print("You can't afford that")
+            elif choice == 2 and inventory["Gold"] >= 50:
+                print("You bought 5 health potions.")
+                inventory["Health potions"] += 5
+                inventory["Gold"] -= 50
+            elif choice == 2 and inventory["Gold"] < 50:
+                print("You can't afford that")
+            elif choice == 3:
+                continue
+        elif choice == 3:
+            choice = int(input("Where would you like to go?\n1.town2\n2.The dungeon\n3.The Castle\n4.Stay here\n"))
+            if choice == 1:
+                area = betterSwordTown()
+                return area
+            elif choice == 2:
+                area = dungeon()
+                return area
+            elif choice == 3:
+                choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
+                if choice == "y":
+                    area = castle()
+                    return area
+                elif choice == "n":
+                    continue
+            elif choice == 4:
+                continue
+            pass
+        else:
+            print("Invalid")
 
-#make a function for normal combat
-    #combat will be 1v1-1v3ish and start with checking if the players or enemies dex is higher.
-    #Whoever has the higher dex will go first in the combat, and the order will go in order from the highest to lowest.
-    #When the player takes a turn they will be given options, 1. Attack, 2. Heavy Attack, 3. Potions, 4. Flee
-    #If they attack, the function will check the stat mod for the weapon, and then add that to the weapons damage before applying it to the enemies health and decreasing it.
-    #If they choose to use heavy attack, then it calculate the damage same as the attack, before doubling it, but there is also a 40% chance it misses and you lose your turn.
-    #If they choose to use potions, it will open their bag, and list all their potions with numbers and the amount of them, with the boost they give. There will also be an additional option to shut the bag after opening it and going back to your options.
-    #If they choose to flee, then a value will be retreived from a dictionary that represents the escape chance as a percent for each type of monster. Dex is then doubled and added to it. If it equals or exceeds 100% then they will guaranteed escape. otherwise they waste the turn trying to escape, and rng decides if they do or not
-    #After the players turn, or if the monster has higher dex it will take its turn.
-    #The monster will have a chance to either normal attack, or do a heavy attack, with a 70% chance and 30% respectivly, and the damage will be calculated the same way as the player, from a dictionray where the enemy stats are stored.
-    #After the monster attacks or fails to attack play will go to the next, which will either, return to the character, or the next monster, and will repeat these same steps until either the player flees succesfully, kills the monsters, or the player dies.
-    #If the player dies then they will get a game over text and the option to play again.
-    #If they flee it will say they fled and will return them to whatever location they were at before combat started.
-    #If they win they will get a battle win text, telling them how much xp they got, if they leveled up, if they got gold, and if they got any items.
-def town1():
-    pass
-def town2():
-    pass
-def town3():
-    pass
-def forestOrSomething():
-    pass
 
+def betterSwordTown():
+    print("Welcome to town2")
+    global player_stats
+    global inventory
+    while True:
+        choice = int(input("What would you like to do?\n1.Gear shop\nApothecary\n3.Go somewhere else\n"))
+        if choice == 1:
+            choice = int(input("Welcome to the gear shop. What would you like to do?\n1.Buy something\n2.leave\n"))
+            if choice == 1:
+                choice = int(input("1.Titanium sword - 300g - 15dmg\n2.Mythril sword - 1250g - 40dmg\n3.go back\n"))
+                if choice == 1 and inventory["Gold"] >= 300:
+                    print("You bought the Iron sword")
+                    inventory["Sword"]["Name"] = "Titanium sword"
+                    inventory["Sword"]["Damage"] = 15
+                    inventory["Sword"]["Affinity"] = "Strength"
+                    inventory["Gold"] -= 300
+                elif choice == 1 and inventory["Gold"] < 300:
+                    print("You can't afford that")
+                elif choice == 2 and inventory["Gold"] >= 1250:
+                    print("You bought the Steel sword")
+                    inventory["Sword"]["Name"] = "Mythril sword"
+                    inventory["Sword"]["Damage"] = 40
+                    inventory["Sword"]["Affinity"] = "Strength"
+                    inventory["Gold"] -= 1250
+                elif choice == 2 and inventory["Gold"] < 1250:
+                    print("You can't afford that")
+                elif choice == 3:
+                    continue
+        elif choice == 2:
+            choice = int(input("Welcome to the Apothocary, what would you like to do?\n1.buy health potion\n2.buy 5 health potions\n3.leave\n"))
+            if choice == 1 and inventory["Gold"] >= 10:
+                print("You purchased one health potion!")
+                inventory["Health potions"] += 1
+                inventory["Gold"] -= 10
+            elif choice == 1 and inventory["Gold"] < 10:
+                print("You can't afford that")
+            elif choice == 2 and inventory["Gold"] >= 50:
+                print("You bought 5 health potions.")
+                inventory["Health potions"] += 5
+                inventory["Gold"] -= 50
+            elif choice == 2 and inventory["Gold"] < 50:
+                print("You can't afford that")
+            elif choice == 3:
+                continue
+        elif choice == 3:
+            choice = int(input("Where would you like to go?\n1.town1\n2.The dungeon\n3.The Castle\n4.Stay here\n"))
+            if choice == 1:
+                area = swordTown()
+                return area
+            elif choice == 2:
+                area = dungeon()
+                return area
+            elif choice == 3:
+                choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
+                if choice == "y":
+                    area = castle()
+                    return area
+                elif choice == "n":
+                    continue
+            elif choice == 4:
+                continue
+            pass
+        else:
+            print("Invalid")
+    pass
+def dungeon():
+    global player_stats
+    global inventory
+    print("Welcome to the dungeon")
+    while True:
+        choice = int(input("What would you like to do?\n1.Fight\n2.Leave\n"))
+        if choice == 1:
+            thing = input("What enemy would you like to fight?\nWolf\nBandit\nElite Bandit\nCorrupt Knight\nRoyal Guard\n(Enter the name EXACTLY)\n")
+            player_stats, inventory = combat(thing, player_stats)
+            continue
+        elif choice == 2:
+            choice = int(input("Where would you like to go?\n1.town1\n2.town2\n3.The Castle\n4.Stay here\n"))
+            if choice == 1:
+                area = swordTown()
+                return area
+            elif choice == 2:
+                area = betterSwordTown()
+                return area
+            elif choice == 3:
+                choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
+                if choice == "y":
+                    area = castle()
+                    return area
+                elif choice == "n":
+                    continue
+            elif choice == 4:
+                continue
+            pass
+        else:
+            print("Invalid")
+    pass
 
 
 def castle():
+    global player_stats
+    global inventory
+    print("Welcome to the castle, the final fights are ahead")
+    combat("Royal Guard",player_stats)
+    combat("Royal Guard",player_stats)
+    combat("Royal Guard",player_stats)
+    print("You've reached the final boss")
+    combat("boss",player_stats)
+    print("You did it! you won")
+    thing = input("Would you like to try again? y/n\n")
+    if thing == "y":
+        gameSetup()
+    elif thing == "n":
+        sys.exit()
     pass
-#each of the 3 towns/villages will be a function
-    #when they enter each town, the text will greet them, saying something similar to "welcome to x"
-    #It will then present them with options for the town.
-        #Each of the three towns will have the same options locations wise, but the items in each shop and the prices would change, with one being worse, one being mediumish, and one being end game geared.
-    #The first will be the gear shop
-        #The gear shop would have the armor and the weapons that the player can buy.
-        #The shopkeep would greet them and then they would get a list that displays the items and their cost.
-            #there would be a dictionary for each shop, with the key being the items name and the value being the items cost. The stats would be given in parenthases
-        #The last option would be to go back outside, and the shopkeep would say bye to them as they leave.
-    #The second option would be to go to an apothecary
-        #The player would be greeted with a slightly different text then before.
-        #The potions would then be displayed, with the names and prices, alongside stats
-            #The potions would also be stored in a dictionary.
-    #The third shop would be a stable
-        #The stable would, of course, sell/rent horses to the player.
-        #The horses would have varying prices depending on its stats.
-        #The horses would mostly be useful for decreasing the chance of you getting attacked by bandits while traveling between locations
-            #Certain more expensive horses would also get you from point a to b in one day, so you wouldn't hvae to experince a night outside walls, and risk getting robbed or ambushed.
-    #You'd be able to sell things in their respective shops.
-    #There would also be a quest board of sorts, which would mostly be combat things, like go clear out a bandit camp or something in the woods near the town. These would reward the player with extra gold and xp, but also usually be harder than random encounters.
-        #There would only be 2 quests, with different diffuclty depending on which town its in.
-        #After the quest is taken, a new location would appear in the location select, that would be named something like "Bandit Camp" if thats the quest they choose.
-        #When they choose it, there would be travel text, and of course the chance of being ambushed like any other travel, but once they make it there, combat starts immediatly.
-    #The last option would be to travel to another location.
-        #When they choose this option it would display all the other locations names, that are accesiable.
-            #If they go to choose the castle, which is the final area and does not let you leave after entering, it would display a warning message twice to make sure they are ready, as they can't leave once they go there.
-    #When the character finally decides to go to the castle, it would print text describing the castle, it would be gloomy and despairing. Combat would quickly start with higher level enemies, and you would have to fight through 3 waves of enemies before the base, with there only being a break right before the boss to rest and regain your health from it. None of these battles will allow the player to flee.
-        #There would be two different endings here.
-            #The first would be the good ending where you defeat the final boss and save the kingdom
-            #The second would be the bad ending, where you die to the final boss and the kingdom falls.
-    #The boss fight would be different from other fights.
-    #The boss would of course have more health then the average enemy, alongside more damage, but they can also summon 2 of the unit you fought waves of to reach him to aid him in combat. These would be slightly weaker variants to make it easier, and he would only summon them every 4 turns, and can't have more than 2.
-        #On the first round the boss would spawn with 2 of the weaker variants already there, and the count would start there. 5 rounds later, a conditional would check if they are alive. each one would be labled and have a boolean that is True if they live, and False if they are dead.
-        #They are only summoned if its False
+area = swordTown
+
+
+while True:
+    area = area()
