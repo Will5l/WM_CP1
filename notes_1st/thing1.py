@@ -134,7 +134,7 @@ def gameSetup():
 
     #Perk setup
     print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
-    print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
+    sp.slow_print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
     "\n3.Quick-footed:When combat starts your dex checks gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: have a 20 percent chance to dodge an attack, alongside all dex related things getting 30 percent more effectivness. Have 1/3 less hp" \
     "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests. (last two not implemented yet)")
     while True:
@@ -172,7 +172,7 @@ def gameSetup():
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
     #Intro text
-    print("intro thing here")
+    sp.slow_print("intro thing here")
 
     
     return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
@@ -369,7 +369,7 @@ def combat(enemy1name,player_stats):
         while True:
             flee = False
             turn = player_stats["Name"]
-            print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+            sp.slow_print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
@@ -394,7 +394,7 @@ def combat(enemy1name,player_stats):
             skip = True
     while enemy1alive == True and player_stats["CurHealth"] >= 0 and flee == False:
             flee = False
-            print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
+            sp.slow_print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
             choice = int(input())
             if choice not in options:
                 print("Invalid")
