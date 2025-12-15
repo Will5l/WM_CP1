@@ -132,7 +132,7 @@ def gameSetup():
     print("\nYou can choose up to two perks, with buffs, and sometimes debuffs.")
     print("\nHere is the list of perks you can choose from:\n1.ToughSkin:You have a flatout 20 percent damage reduction\n2.Reckless:You always land heavy attacks, but at the cost of taking 1/3 of the damage they deal" \
     "\n3.Quick-footed:When combat starts your dex checks gets an additonal 50 percent effectivness, and so does your fleeing.\n4.Cat-like Reflexes: have a 20 percent chance to dodge an attack, alongside all dex related things getting 30 percent more effectivness. Have 1/3 less hp" \
-    "\n5.Prodigy: You get 50 percent more experiance from all sources.\n6.The Accursed:half your own attack, increase enemy damage by 1.5x, make you extremly unlucky when it comes to drops\n7.The Hated:make people not offer you better things, and the things they do offer would be 50% more exspensive. You also recive half the rewards from quests. (last two not implemented yet)")
+    "\n5.Prodigy: You get 50 percent more experiance from all sources.\n")
     while True:
         perk_choice1 = int(input("Enter the number that corresponds with the perk: "))
         perk_choice2 = int(input("Enter the number that corresponds with the perk: "))
@@ -157,10 +157,6 @@ def gameSetup():
                         catlike_reflexes = True
                     if perk_choice1 == 5 or perk_choice2 == 5:
                         prodigy = True
-                    if perk_choice1 == 6 or perk_choice2 == 6:
-                        the_accursed = True
-                    if perk_choice1 == 7 or perk_choice2 == 7:
-                        the_hated = True
                     break
                 elif perk_choice2 not in perk_list_thing:
                     print("Invalid choice")
@@ -168,7 +164,7 @@ def gameSetup():
             elif perk_choice1 not in perk_list_thing:
                 print("Invalid choice")
     #Intro text
-    print("You are a wanderer who arrived in a distant kingdom to free it from its corrupted king. You must fight enemies to get gold and xp, to level up and get better equipment to take on the king and save the kingdom")
+    print("You are a wanderer who arrived in a distant kingdom to free it from its corrupted king. You must fight enemies to get gold and xp, to level up and get better equipment to take on the king and save the kingdom\n")
 
     return hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts
 hp_mod,str_mod,dex_mod,player_stats,toughskin,reckless,quickfooted,catlike_reflexes,prodigy,the_accursed,the_hated,inventory,artifacts = gameSetup()
@@ -214,7 +210,7 @@ basic_enemies = {
     "Bandit":{
         "Health":15,
         "strength":1,
-        "weapondmg":3,
+        "weapondmg":2,
         "dexterity":2,
         "gold":10,
         "XP":35,
@@ -222,7 +218,7 @@ basic_enemies = {
     "Elite Bandit":{
         "Health":20,
         "strength":2,
-        "weapondmg":4,
+        "weapondmg":3,
         "dexterity":4,
         "gold":25,
         "XP":55,
@@ -230,7 +226,7 @@ basic_enemies = {
     "Corrupt Knight":{
         "Health":35,
         "strength":4,
-        "weapondmg":6,
+        "weapondmg":5,
         "dexterity":2,
         "gold":50,
         "XP":65,
@@ -238,15 +234,15 @@ basic_enemies = {
     "Royal Guard":{
         "Health":45,
         "strength":5,
-        "weapondmg":8,
+        "weapondmg":7,
         "dexterity":3,
         "gold":100,
         "XP":100,
     },
     "boss": {
-    "Health":200,
-    "strength":8,
-    "weapondmg":15,
+    "Health":150,
+    "strength":6,
+    "weapondmg":10,
     "dexterity":6,
     "gold":100,
     "XP":100,
@@ -333,6 +329,7 @@ def combat(enemy1name,player_stats):
     #Enemy stats get set
     flee = False
     skip = False
+    done = False
     base_dex = player_stats["Dexterity"]
     enemy1hp = basic_enemies[enemy1name]["Health"]
     enemy1str = basic_enemies[enemy1name]["strength"]
@@ -362,7 +359,7 @@ def combat(enemy1name,player_stats):
         print("Enemies go first")
         enemy_first = True
     if player_first == True:
-        while True:
+        while done == False:
             flee = False
             turn = player_stats["Name"]
             print("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee")
@@ -374,7 +371,7 @@ def combat(enemy1name,player_stats):
                     enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive = False
-                    break
+                    done = True
     if flee == False:
         flee = False
         if enemy1alive == True:
@@ -390,17 +387,17 @@ def combat(enemy1name,player_stats):
             skip = True
     while enemy1alive == True and player_stats["CurHealth"] >= 0 and flee == False:
             flee = False
-            choice = int(input("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee"))
+            choice = int(input("What would you like to do? \n1.Normal attack \n2.Heavy attack \n3.look at potions \n4.Flee\n"))
             if choice not in options:
                 print("Invalid")
             elif choice in options:
                     turn = player_stats["Name"]
                     enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
-                        enemy1alive == False
+                        enemy1alive = False
                         break
                     if enemy1hp <= 0:
-                        enemy1alive == False
+                        enemy1alive = False
                         break
                     if enemy1alive == False:
                         print(f"You defeated {enemy1name}")
@@ -431,7 +428,7 @@ def combat(enemy1name,player_stats):
         player_stats["Dexterity"] = base_dex
         return player_stats, inventory
     elif enemy1alive == False:
-        print("You killed the wolf")
+        print(f"You killed {enemy1name}")
         player_stats["Dexterity"] = base_dex
         if prodigy == True:
             enemy1xp *= 1.5
@@ -475,7 +472,7 @@ def swordTown():
         elif choice == 2:
             choice = int(input("Welcome to the Apothocary, what would you like to do?\n1.buy health potion\n2.buy 5 health potions\n3.leave\n"))
             if choice == 1 and inventory["Gold"] >= 10:
-                print("You purchased one health potion!")
+                print("You purchased one health potion")
                 inventory["Health potions"] += 1
                 inventory["Gold"] -= 10
             elif choice == 1 and inventory["Gold"] < 10:
@@ -491,15 +488,15 @@ def swordTown():
         elif choice == 3:
             choice = int(input("Where would you like to go?\n1.town2\n2.The dungeon\n3.The Castle\n4.Stay here\n"))
             if choice == 1:
-                area = betterSwordTown()
+                area = betterSwordTown
                 return area
             elif choice == 2:
-                area = dungeon()
+                area = dungeon
                 return area
             elif choice == 3:
                 choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
                 if choice == "y":
-                    area = castle()
+                    area = castle
                     return area
                 elif choice == "n":
                     continue
@@ -557,15 +554,15 @@ def betterSwordTown():
         elif choice == 3:
             choice = int(input("Where would you like to go?\n1.town1\n2.The dungeon\n3.The Castle\n4.Stay here\n"))
             if choice == 1:
-                area = swordTown()
+                area = swordTown
                 return area
             elif choice == 2:
-                area = dungeon()
+                area = dungeon
                 return area
             elif choice == 3:
                 choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
                 if choice == "y":
-                    area = castle()
+                    area = castle
                     return area
                 elif choice == "n":
                     continue
@@ -588,15 +585,15 @@ def dungeon():
         elif choice == 2:
             choice = int(input("Where would you like to go?\n1.town1\n2.town2\n3.The Castle\n4.Stay here\n"))
             if choice == 1:
-                area = swordTown()
+                area = swordTown
                 return area
             elif choice == 2:
-                area = betterSwordTown()
+                area = betterSwordTown
                 return area
             elif choice == 3:
                 choice = input("Are you sure you want to go to the castle? You can't leave it once you do. y/n\n")
                 if choice == "y":
-                    area = castle()
+                    area = castle
                     return area
                 elif choice == "n":
                     continue
@@ -624,8 +621,9 @@ def castle():
     elif thing == "n":
         sys.exit()
     pass
-area = swordTown()
+area = swordTown
 
 
 while True:
-    area = area
+    print("Thing")
+    area = area()
