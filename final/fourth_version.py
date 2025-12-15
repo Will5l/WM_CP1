@@ -357,7 +357,6 @@ def combat(enemy1name,player_stats):
         player_first = True
     elif player_stats["Dexterity"] < enemy1dex:
         print("Enemies go first")
-        enemy_first = True
     if player_first == True:
         while done == False:
             flee = False
@@ -367,7 +366,6 @@ def combat(enemy1name,player_stats):
             if choice not in options:
                 print("Invalid")
             elif choice in options:
-                    atk_choice = 1
                     enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive = False
@@ -395,12 +393,6 @@ def combat(enemy1name,player_stats):
                     enemy1hp, player_stats["CurHealth"], flee, inventory=attacks(choice,enemy1hp,enemy1str,enemy1wdmg,turn)
                     if enemy1hp <= 0:
                         enemy1alive = False
-                        break
-                    if enemy1hp <= 0:
-                        enemy1alive = False
-                        break
-                    if enemy1alive == False:
-                        print(f"You defeated {enemy1name}")
                         break
             if enemy1alive == True:
                 turn = "enemy"
